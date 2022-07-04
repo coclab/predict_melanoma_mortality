@@ -3,9 +3,9 @@
 
 ## Code
 This repository contains
-* Python notebook with all the code produced for the data cleaning, analysis, model definition, training and testing
-* Joblib file containing the trained model achieving best resulys (an sklearn Random Forest Classifier)
-* Python script to implement the web application
+* the Python notebook with all the code produced for the data cleaning, analysis, model definition, training and testing
+* the Joblib file containing the trained model achieving best results (an `sklearn` Random Forest Classifier)
+* the Python script to implement the web application via `Flask`
 * HTML templates and images for the static web page
 
 
