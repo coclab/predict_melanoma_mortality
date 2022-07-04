@@ -1,0 +1,466 @@
+<!-- 
+Author Claudia Cozzolino https://github.com/coclab
+Credits to https://towardsdatascience.com/building-a-web-application-to-deploy-machine-learning-models-e224269c1331
+ -->
+
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Melanoma Risk Prediction</title>
+    
+     <!-- add favicon -->
+      <link rel="shortcut icon" href="{{ url_for('static', filename='pagelogo.ico') }}">
+    
+    
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <style>
+      html, body {
+      min-height: 100%;
+      }
+      body, div, form, input, select, textarea, p { 
+      padding: 0;
+      margin: 0;
+      outline: none;
+      font-family: Roboto, Arial, sans-serif;
+      font-size: 14px;
+      color: #613b07; <!-- #452b07 font color except header 1 -->
+      line-height: 22px;
+      }
+      sup {
+          vertical-align: super;
+          font-size: smaller;
+      }
+      h1 {
+      position: absolute;
+      margin: 0;
+      font-size: 32px;
+      color: #fff;
+      z-index: 2;
+      }
+      h5 {
+      margin: 10px 0;
+      }
+      .testbox {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: inherit;
+      padding: 20px;
+      }
+      
+      table, th, td {
+          border: 3px solid white;
+          border-collapse: collapse;
+      }
+      td {
+          background-color: #b58776;
+      }
+
+      
+      form {
+      width: 100%;
+      padding: 20px;
+      border-radius: 6px;
+      background: #fff;
+      box-shadow: 0 0 20px 0 #452b07; <!-- main form shadow -->
+      }
+      .banner {
+      position: relative;
+      height: 110px;
+      background-image: url("static/MED-moles2.jpg");  
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      }
+      .banner::after {
+      content: "";
+      <!-- background-color: #613b07; -->
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      }
+      input, select, textarea {
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      }
+      input {
+      width: calc(100% - 10px);
+      padding: 5px;
+      }
+      select {
+      width: 100%;
+      padding: 7px 0;
+      background: transparent;
+      }
+      textarea {
+      width: calc(100% - 12px);
+      padding: 5px;
+      }
+      .item:hover p, .item:hover i, .question:hover p, .question label:hover, input:hover::placeholder, a {
+      color: #1e1305;
+      }
+      .item input:hover, .item select:hover, .item textarea:hover {
+      border: 1px solid transparent;
+      box-shadow: 0 0 6px 0 #452b07;
+      color: #613b07;
+      }
+      .item {
+      position: relative;
+      margin: 10px 0;
+      }
+      input[type="date"]::-webkit-inner-spin-button {
+      display: none;
+      }
+      .item i, input[type="date"]::-webkit-calendar-picker-indicator {
+      position: absolute;
+      font-size: 20px;
+      color: #a9a9a9;
+      }
+      .item i {
+      right: 2%;
+      top: 30px;
+      z-index: 1;
+      }
+      [type="date"]::-webkit-calendar-picker-indicator {
+      right: 1%;
+      z-index: 2;
+      opacity: 0;
+      cursor: pointer;
+      }
+      input[type=radio], input[type=checkbox]  {
+      display: none;
+      }
+      label.radio, label.check {
+      position: relative;
+      display: inline-block;
+      margin: 5px 20px 15px 0;
+      cursor: pointer;
+      }
+      .question span {
+      margin-left: 30px;
+      }
+      span.required {
+      margin-left: 0;
+      color: red;
+      }
+      .checkbox-item label {
+      margin: 5px 20px 10px 0;
+      }
+      label.radio:before, label.check:before {
+      content: "";
+      position: absolute;
+      left: 0;
+      }
+      label.radio:before {
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      border: 2px solid #613b07;
+      }
+      label.check:before {
+      top: 2px;
+      width: 16px;
+      height: 16px;
+      border-radius: 2px;
+      border: 1px solid ;
+      }
+      input[type=checkbox]:checked + .check:before {
+      background: #452b07;
+      }
+      label.radio:after {
+      left: 5px;
+      border: 3px solid #452b07;
+      }
+      label.check:after {
+      left: 4px;
+      border: 3px solid #fff;
+      }
+      label.radio:after, label.check:after {
+      content: "";
+      position: absolute;
+      top: 6px;
+      width: 8px;
+      height: 4px;
+      background: transparent;
+      border-top: none;
+      border-right: none;
+      transform: rotate(-45deg);
+      opacity: 0;
+      }
+      input[type=radio]:checked + label:after, input[type=checkbox]:checked + label:after {
+      opacity: 1;
+      }
+      .btn-block {
+      margin-top: 10px;
+      text-align: center;
+      }
+      button {
+      width: 150px;
+      padding: 10px;
+      border: none;
+      border-radius: 5px; 
+      background: #9B0014; 
+      font-size: 16px;
+      color: #fff;
+      cursor: pointer;
+      }
+      button:hover {
+      background: #8a0113; 
+      }
+      @media (min-width: 568px) {
+      .city-item {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      }
+      .city-item input {
+      width: calc(50% - 20px);
+      }
+      .city-item select {
+      width: calc(50% - 8px);
+      }
+      }
+      
+      
+    </style>
+  </head>
+  
+  
+  <body>
+    <div style="background-color:#9B0014;font-size:20px;color:#FFF;padding:8px;margin:0;font-family:Arial, Helvetica, sans-serif;height: 98px;">
+    	<div style="float:left;">
+    		<a href="http://www.unipd.it" TARGET="_blank"><img src="static/logouni.800.png" border="0" alt="" /></a>
+    	</div>
+    	
+    	<div style="float:right; margin:2px 0 0 15px;">
+    		<a href="https://www.ioveneto.it/" TARGET="_blank"><img src="static/iov.jpg"  height="95px" border="0" alt="" /></a>
+    	</div>
+    	<div style="float:right; margin:2px 0 0 15px;">
+    		<a href="http://www.dctv.unipd.it" TARGET="_blank"><img src="static/dip_w.png" height="95px" border="0" alt="" /></a>
+    	</div>
+    	<div style="float:right; margin:11px 0;font-size:.85em; text-align:right">
+    		<a style="text-decoration: none;color:#fff;background-color:#9b0014;" href="http://www.dctv.unipd.it" TARGET="_blank">Dipartimento<br/>di&nbsp;<span style="color:#3AF">Scienze</span><br />Cardio-Toraco-Vascolari<br/>e Sanit&aacute; Pubblica</a>
+    	</div>
+    	
+    </div>
+    
+    <div align = "center"> 
+              <h2 style='font-size: 28px;' >Melanoma Risk Prediction</h2>
+    </div>
+    
+    <div style='margin:20px; padding:5px'>
+    <h2>Try now!</h2>
+      <p> Please fill in the following form with ALL the requested information. Refere to the 8<sup>th</sup> edition American Joint Committee on Cancer (AJCC)
+      <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7652033/pdf/nihms-1642354.pdf">staging system</a>.
+      <br> Note: no data will be stored during and after the process.
+      <br><br>
+      </p>
+    </div>
+    
+    <div class="testbox">
+    <form method=post>
+    
+    
+     
+      
+
+
+      
+      <div class="item age">
+        <p>Age (at diagnosis)<span class="required">*</span></p>
+        <input type="number" name="age" min="0" max="130" required/>
+        <br><br>
+      </div>
+      
+      <div class="question gender">
+        <p>Gender<span class="required">*</span></p>
+        <div class="question answer gender">
+          <input type="radio" value="Male" id="Male" name="gender" required/>
+          <label for="Male" class="radio"><span>Male</span></label>
+          <input type="radio" value="Female" id="Female" name="gender" required/>
+          <label for="Female" class="radio"><span>Female</span></label>
+        </div>
+        <br><br>
+      </div>
+      
+      <div class="select site">
+        <p>Tumor primary site<span class="required">*</span></p>
+        <select name="site" id="selected site">
+            <option value="">--Please choose an option--</option>
+            <option value="Trunk">Trunk</option>
+            <option value="Lower limb">Lower limb</option>
+            <option value="Upper limb">Upper limb</option>
+            <option value="Head">Head</option>
+            <option value="Hands or feet">Hands or feet</option>
+            
+        </select>
+        <br><br>
+      </div>
+         
+      
+      <div class="question T">
+        <p>T stage<span class="required">*</span></p>
+        <div class="question answer T">
+          <input type="radio" value="TX" id="TX" name="T" required/>
+          <label for="TX" class="radio"><span>TX</span></label> <!-- <input type="radio" value="T0/TX/Tis" id="T0/TX/Tis" name="T" required/>  <label for="T0/TX/Tis" class="radio"><span>T0/TX/Tis</span></label> -->
+          <input type="radio" value="T0" id="T0" name="T" required/>
+          <label for="T0" class="radio"><span>T0</span></label>
+          <input type="radio" value="T1" id="T1" name="T" required/>
+          <label for="T1" class="radio"><span>T1</span></label>
+          <input type="radio" value="T2" id="T2" name="T" required/>
+          <label for="T2" class="radio"><span>T2</span></label>
+          <input type="radio" value="T3" id="T3" name="T" required/>
+          <label for="T3" class="radio"><span>T3</span></label>
+          <input type="radio" value="T4" id="T4" name="T" required/>
+          <label for="T4" class="radio"><span>T4</span></label>
+          
+        </div>
+        <br><br>
+      </div>
+      
+      <div class="question N">
+        <p>N stage<span class="required">*</span></p>
+        <div class="question answer N">
+          <input type="radio" value="NX" id="NX" name="N" required/>  
+          <label for="NX" class="radio"><span>NX</span></label> <!-- <input type="radio" value="N0/NX" id="N0/NX" name="N" required/>  <label for="N0/NX" class="radio"><span>N0/NX</span></label> -->
+          <input type="radio" value="N0" id="N0" name="N" required/>
+          <label for="N0" class="radio"><span>N0</span></label>
+          <input type="radio" value="N1a" id="N1a" name="N" required/>
+          <label for="N1a" class="radio"><span>N1a</span></label>
+          <input type="radio" value="N1b" id="N1b" name="N" required/>
+          <label for="N1b" class="radio"><span>N1b</span></label>
+          <input type="radio" value="N1c" id="N1c" name="N" required/>
+          <label for="N1c" class="radio"><span>N1c</span></label>
+          <input type="radio" value="N2a" id="N2a" name="N" required/>
+          <label for="N2a" class="radio"><span>N2a</span></label>
+          <input type="radio" value="N2b" id="N2b" name="N" required/>
+          <label for="N2b" class="radio"><span>N2b</span></label>
+          <input type="radio" value="N2c" id="N2c" name="N" required/>
+          <label for="N2c" class="radio"><span>N2c</span></label>
+          <input type="radio" value="N3" id="N3" name="N" required/>
+          <label for="N3" class="radio"><span>N3</span></label>
+          <input type="radio" value="N3c" id="N3c" name="N" required/>
+          <label for="N3c" class="radio"><span>N3c</span></label>
+          
+        </div>
+        <br><br>
+      </div>
+      
+      <div class="question M">
+        <p>M stage<span class="required">*</span></p>
+        <div class="question answer M">
+          <!-- <input type="radio" value="MX" id="MX" name="M" required/> <label for="MX" class="radio"><span>MX</span></label> -->
+          <input type="radio" value="M0" id="M0" name="M" required/>
+          <label for="M0" class="radio"><span>M0</span></label>
+          <input type="radio" value="M1" id="M1" name="M" required/>
+          <label for="M1" class="radio"><span>M1</span></label>
+          
+        </div>
+        <br><br>
+      </div>
+      
+     <div class="select histology">
+        <p>Histology subtype<span class="required">*</span></p>
+        <select name="histology" id="selected histology">
+            <option value="">--Please choose an option--</option>
+            <option value="Superficial spreading">Superficial spreading</option>
+            <option value="Nodular">Nodular</option>
+            <option value="Malignant">Malignant</option>
+            <option value="Lentigo maligna">Lentigo maligna</option>
+            <option value="Spitzoid">Spitzoid</option>
+            <option value="Acral-lentiginous">Acral-lentiginous</option>
+            <option value="Desmoplastic">Desmoplastic</option>
+            <option value="Arising from blue naevus">Arising from blue naevus</option>
+            <!-- <option value="Other">Other</option> -->
+        </select>
+        <br><br>
+      </div>
+      
+      <div class="question growth">
+        <p>Growth type<span class="required">*</span></p>
+        <div class="question answer growth">
+          <input type="radio" value="Vertical" id="Vertical" name="growth" required/>
+          <label for="Vertical" class="radio"><span>Vertical</span></label>
+          <input type="radio" value="Radial" id="Radial" name="growth" required/>
+          <label for="Radial" class="radio"><span>Radial</span></label>
+          
+        </div>
+        <br><br>
+      </div>
+      
+      <div class="question ulceration">
+        <p>Ulceration<span class="required">*</span></p>
+        <div class="question answer ulceration">
+          <input type="radio" value="Absent" id="ulceration_Absent" name="ulceration" required/>
+          <label for="ulceration_Absent" class="radio"><span>Absent</span></label>
+          <input type="radio" value="Present" id="ulceration_Present" name="ulceration" required/>
+          <label for="ulceration_Present" class="radio"><span>Present</span></label>
+          
+        </div>
+        <br><br>
+      </div>
+      
+      <div class="question regression">
+        <p>Tumor regression<span class="required">*</span></p>
+        <div class="question answer regression">
+          <input type="radio" value="Absent" id="regression_Absent" name="regression" required/>
+          <label for="regression_Absent" class="radio"><span>Absent</span></label>
+          <input type="radio" value="Present" id="regression_Present" name="regression" required/>
+          <label for="regression_Present" class="radio"><span>Present</span></label>
+          
+        </div>
+        <br><br>
+      </div>
+      
+      <div class="question til">
+        <p>TILs<span class="required">*</span></p>
+        <div class="question answer til">
+          <input type="radio" value="Absent" id="til_Absent" name="til" required/>
+          <label for="til_Absent" class="radio"><span>Absent</span></label>
+          <input type="radio" value="Present" id="til_Present" name="til" required/>
+          <label for="til_Present" class="radio"><span>Present</span></label>
+          
+        </div>
+        <br><br>
+      </div>
+      
+      <div class="item mitotic">
+        <p>Mitotic count (per mm&sup2)<span class="required">*</span></p>
+        <input type="number" name="mitotic" min="0" max="1000" step="any" required/> <!-- step to allow floating number, when step="0.01" allowed number of decimal numbers could be specified-->
+        <br><br>
+      </div>
+      
+
+        </div>
+        <div class="btn-block">
+          <button type="submit" href="/">Predict risk</button>
+        </div>
+    </form>
+    </div>
+    
+    <div  style='margin:20px; padding:5px'>
+    <br><br>
+    <h2>Reference</h2>
+    <p>This web application has been developed by the University of Padua, <a href="https://www.dctv.unipd.it/">Department of Cardiac, Thoracic, Vascular Sciences and Public Health</a> in collaboration with the <a href="https://www.ioveneto.it/">Veneto Institute of Oncology IOV-IRCCS</a>, Soft-Tissue, Peritoneum and Melanoma Surgical Oncology Unit. 
+     <br><br>More information and contacts can be found <a href="link articolo">here</a>.</p>
+    </div>
+    
+    
+
+    <div style="background-color:#9B0014;font-size:20px;color:white;padding:4px;margin:0;font-family:Arial, Helvetica, sans-serif;height: 66px;">
+    	<div style="clear: both; margin:2px;font-size:.55em;;color:white;text-align:right;font-style: italic;">
+    		Universit&agrave;&nbsp;degli&nbsp;Studi&nbsp;di&nbsp;Padova<br/>
+    		Dipartimento&nbsp;di&nbsp;Scienze&nbsp;Cardio-Toraco-Vascolari&nbsp;e&nbsp;Sanit&aacute;&nbsp;Pubblica<br/>
+    		Via L. Loredan 18 - 35131 Padova<br/>
+    	</div>
+    </div>
+
+  </body>
+</html>
