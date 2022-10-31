@@ -15,15 +15,15 @@ import pandas as pd
 import numpy as np
 
 
-# load sklearn classification model (already trained)
+import tensorflow as tf
+from tensorflow import keras  # tf.keras
 
-#from sklearn.ensemble import RandomForestClassifier
-from joblib import load
+#set seed for reproducibility of results
+np.random.seed(42) 
+tf.random.set_seed(42)
 
 # load model
-clf = load('./RF_model.joblib')
-
-
+DNNs_fit = keras.models.load_model('./DNNs trained.h5')
 
 
 # create istance of Flask app
@@ -46,7 +46,7 @@ def main_page():
         # read form input and save in global var
         global X, age, mitotic, gender, histology, T, N, M, ulceration, regression, growth, til, site
         
-        # prepare empty df where store input
+        # prepare empty df where store input (as X1 names order)
         column_names = ['Male', 'age', 'Mitotic count', 'Histology Desmoplastic melanoma',
                'Histology Lentigo maligna', 'Histology Malignant melanoma',
                'Histology Melanoma arising from blue naevus',
@@ -145,7 +145,10 @@ def prediction():
     
     
     # Using the model, predict the probabilities to survive in 3 years from diagnosis
-    probabilities = clf.predict_proba(X.iloc[0,:].values.reshape(1, -1))[0]
+    probability = DNNs_fit.predict(X.iloc[0,:].values.reshape(1, -1))[0][0]
+    probabilities = np.array([1-probability, probability])
+    
+    
     print(probabilities)
       
     # Find the label and the probability of the top three most probable classes, and put them under predictions
@@ -174,7 +177,7 @@ def prediction():
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=80) #when in server
-    # app.run(debug=False) #when run in local host
+    #app.run(debug=False) #when run in local host
     
     
     
