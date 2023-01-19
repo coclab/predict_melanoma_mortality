@@ -4,8 +4,8 @@
 ## Code
 This repository contains
 * `cleaning_and_ML_models.ipynb`, the Python notebook with all the code produced for the data cleaning, analysis, model definition, training and testing
-* `RF_model.joblib`, the Joblib file containing the trained model achieving best results (an `sklearn` Random Forest Classifier)
-* `web_app_mela.py`, the Python script to implement the web application via `Flask`
+* `DNNs trained.h5`, the H5 file containing the trained parameters of the Deep Neural Network achieving best results (as a `keras` model)
+* `web_app_mela.py`, the Python script to implement the web application via `Flask`module
 * HTML templates and images for the static web page
 
 
